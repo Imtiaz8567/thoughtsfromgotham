@@ -1,0 +1,390 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Thoughts from Gotham</title>
+    <style>
+        :root {
+            --background: #f0f4f8; /* Light background color */
+            --text: #333;
+            --header: #4a90e2; /* Catchy header color */
+            --button: #333;
+            --button-hover: #555;
+            --highlight-yellow: #FFFF00;
+            --highlight-red: #FF6347;
+            --highlight-lightgreen: #90EE90;
+            --highlight-skyblue: #87CEEB;
+        }
+        [data-theme="dark"] {
+            --background: #2f2f2f;
+            --text: #f4f4f9;
+            --header: #444;
+            --button: #555;
+            --button-hover: #777;
+        }
+        body {
+            font-family: 'Arial', sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: var(--background);
+            color: var(--text);
+            line-height: 1.6;
+        }
+        header {
+            background-color: var(--header);
+            color: white;
+            padding: 1.5em;
+            text-align: center;
+            font-family: 'Futura', sans-serif;
+            font-size: 2.5em;
+        }
+        .search-bar {
+            position: absolute;
+            top: 20px;
+            right: 20px;
+        }
+        .search-bar input {
+            padding: 5px;
+            font-size: 14px;
+        }
+        .container {
+            max-width: 800px;
+            margin: 20px auto;
+            padding: 20px;
+            background-color: rgba(255, 255, 255, 0.9);
+            border-radius: 10px;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+        }
+        textarea {
+            width: 100%;
+            height: 100px;
+            margin-bottom: 10px;
+            padding: 10px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            font-size: 16px;
+        }
+        select, input[type="color"], button {
+            margin-right: 10px;
+        }
+        button {
+            background-color: var(--button);
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            font-size: 16px;
+            cursor: pointer;
+            border-radius: 5px;
+        }
+        button:hover {
+            background-color: var(--button-hover);
+        }
+        .entries, .drafts, .news-section, .questions-section {
+            margin-top: 20px;
+        }
+        .entry, .news-item, .question-item {
+            background-color: #fff;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            padding: 15px;
+            margin-bottom: 10px;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        }
+        .entry-date, .news-date, .question-date {
+            font-size: 12px;
+            color: #666;
+            margin-bottom: 5px;
+        }
+        .highlight {
+            padding: 2px 5px;
+            border-radius: 3px;
+            font-weight: bold;
+        }
+        .theme-toggle {
+            position: fixed;
+            bottom: 20px;
+            left: 50%;
+            transform: translateX(-50%);
+            background-color: var(--button);
+            color: white;
+            border: none;
+            padding: 10px;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+        .theme-toggle:hover {
+            background-color: var(--button-hover);
+        }
+        .ask-question-form {
+            margin-top: 20px;
+        }
+        .ask-question-form input, .ask-question-form textarea {
+            width:  100%;
+            padding: 10px;
+            margin-bottom: 10px;
+        }
+        .social-buttons {
+            margin-top: 10px;
+        }
+        .social-buttons button {
+            margin-right: 5px;
+            padding: 10px 15px;
+            background-color: #1DA1F2; /* Twitter color */
+            border: none;
+            color: white;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+        .social-buttons button:hover {
+            background-color: #0d8ddb;
+        }
+        .font-style-select, .font-color-select, .highlight-select {
+            margin-top: 10px;
+        }
+        .insert-options {
+            margin-top: 10px;
+        }
+        .insert-options input {
+            width: calc(100% - 120px);
+            margin-right: 10px;
+        }
+        .visitor-questions, .news-section {
+            margin-top: 20px;
+        }
+    </style>
+</head>
+<body>
+    <header>
+        Thoughts from Gotham
+        <div class="search-bar">
+            <input type="text" placeholder="Search...">
+        </div>
+    </header>
+    <div class="container">
+        <h2>Create a New Entry</h2>
+        <select id="fontStyle" class="font-style-select">
+            <option value="Arial">Arial</option>
+            <option value="Calibri">Calibri</option>
+            <option value="Times New Roman">Times New Roman</option>
+            <option value="Open Sans">Open Sans</option>
+            <option value="Franklin Gothic">Franklin Gothic</option>
+        </select>
+        <select id="fontColor" class="font-color-select">
+            <option value="black">Black</option>
+            <option value="blue">Blue</option>
+            <option value="red">Red</option>
+            <option value="green">Green</option>
+        </select>
+        <select id="highlightColor" class="highlight-select">
+            <option value="none">No Highlight</option>
+            <option value="yellow">Yellow</option>
+            <option value="red">Red</option>
+            <option value="lightgreen">Light Green</option>
+            <option value="skyblue">Sky Blue</option>
+        </select>
+        <textarea id="entryInput" placeholder="Write your thoughts..."></textarea>
+        <div class="insert-options">
+            <input type="text" id="insertLink" placeholder="Insert link...">
+            <button onclick="insertLink()">Insert Link</button>
+            <input type="file" id="insertImage" accept="image/*">
+            <button onclick="insertImage()">Insert Image</button>
+        </div>
+        <button onclick="saveEntry('draft')">Save as Draft</button>
+        <button onclick="saveEntry('publish')">Publish</button>
+
+        <h2>Published Journal Entries</h2>
+        <div class="entries" id="entries"></div>
+        
+        <h2>Draft Journal Entries</h2>
+        <div class="drafts" id="drafts"></div>
+
+        <h2>News/Articles/Videos from Across the Web</h2>
+        <div class="news-section">
+            <input type="text" id="newsTitle" placeholder="Title of the news/article/video...">
+            <textarea id="newsContent" placeholder="Content or link..."></textarea>
+            <button onclick="postNews()">Post News/Article/Video</button>
+            <div id="newsContainer"></div>
+        </div>
+
+        <h2>Visitor Questions</h2>
+        <div class="visitor-questions">
+            <div class="ask-question-form">
+                <input type="text" id="visitorQuestionInput" placeholder="Visitor's question...">
+                <button onclick="askVisitorQuestion()">Submit Question</button>
+            </div>
+            <div class="questions-section" id="questions"></div>
+        </div>
+    </div>
+    <button class="theme-toggle" onclick="toggleTheme()">Toggle Dark Mode</button>
+    <script>
+        let entries = [];
+        let drafts = [];
+        let visitorQuestions = [];
+        let newsItems = [];
+
+        function saveEntry(status) {
+            const entryText = document.getElementById('entryInput').value;
+            const fontStyle = document.getElementById('fontStyle').value;
+            const fontColor = document.getElementById('fontColor').value;
+            const highlightColor = document.getElementById('highlightColor').value;
+
+            if (entryText) {
+                const entry = {
+                    text: entryText,
+                    fontStyle: fontStyle,
+                    fontColor: fontColor,
+ highlightColor: highlightColor,
+                    date: new Date(),
+                    status: status
+                };
+                if (status === 'draft') {
+                    drafts.push(entry);
+                } else {
+                    entries.push(entry);
+                }
+                document.getElementById('entryInput').value = '';
+                renderDrafts();
+                renderEntries();
+            }
+        }
+
+        function renderDrafts() {
+            const draftsContainer = document.getElementById('drafts');
+            draftsContainer.innerHTML = '';
+            drafts.forEach((draft, index) => {
+                draftsContainer.innerHTML += `
+                    <div class="entry" style="font-family: ${draft.fontStyle}; color: ${draft.fontColor};">
+                        <p>${draft.text}</p>
+                        <button onclick="editDraft(${index})">Edit</button>
+                        <button onclick="deleteDraft(${index})">Delete</button>
+                    </div>
+                `;
+            });
+        }
+
+        function editDraft(index) {
+            const draft = drafts[index];
+            const newDraft = prompt("Edit your draft:", draft.text);
+            if (newDraft) {
+                drafts[index].text = newDraft;
+                renderDrafts();
+            }
+        }
+
+        function deleteDraft(index) {
+            drafts.splice(index, 1);
+            renderDrafts();
+        }
+
+        function renderEntries() {
+            const entriesContainer = document.getElementById('entries');
+            entriesContainer.innerHTML = '';
+            entries.forEach((entry, index) => {
+                entriesContainer.innerHTML += `
+                    <div class="entry" style="font-family: ${entry.fontStyle}; color: ${entry.fontColor};">
+                        <p>${entry.text}</p>
+                        <button onclick="deleteEntry(${index})">Delete</button>
+                    </div>
+                `;
+            });
+        }
+
+        function deleteEntry(index) {
+            entries.splice(index, 1);
+            renderEntries();
+        }
+
+        function askVisitorQuestion() {
+            const question = document.getElementById('visitorQuestionInput').value;
+            if (question) {
+                visitorQuestions.push(question);
+                document.getElementById('visitorQuestionInput').value = '';
+                renderVisitorQuestions();
+            }
+        }
+
+        function renderVisitorQuestions() {
+            const questionsContainer = document.getElementById('questions');
+            questionsContainer.innerHTML = '';
+            visitorQuestions.forEach((question, index) => {
+                questionsContainer.innerHTML += `
+                    <div class="question-item">
+                        <p>${question}</p>
+                        <button onclick="deleteVisitorQuestion(${index})">Delete</button>
+                    </div>
+                `;
+            });
+        }
+
+        function deleteVisitorQuestion(index) {
+            visitorQuestions.splice(index, 1);
+            renderVisitorQuestions();
+        }
+
+        function insertLink() {
+            const link = document.getElementById('insertLink').value;
+            if (link) {
+                const entryInput = document.getElementById('entryInput');
+                entryInput.value += ` [Link: ${link}] `;
+                document.getElementById('insertLink').value = '';
+            }
+        }
+
+        function insertImage() {
+            const imageInput = document.getElementById('insertImage');
+            const file = imageInput.files[0];
+            if (file) {
+                const reader = new FileReader();
+                reader.onload = function(e) {
+                    const entryInput = document.getElementById('entryInput');
+                    entryInput.value += ` ![Image](${e.target.result}) `;
+                };
+                reader.readAsDataURL(file);
+                imageInput.value = ''; // Clear the input
+            }
+        }
+
+        function postNews() {
+            const title = document.getElementById('newsTitle').value;
+            const content = document.getElementById('newsContent').value;
+            if (title && content) {
+                const newsItem = {
+                    title: title,
+                    content: content,
+                    date: new Date()
+                };
+                newsItems.push(newsItem);
+                document.getElementById('newsTitle').value = '';
+                document.getElementById('newsContent').value = '';
+                renderNews();
+            }
+        }
+
+        function renderNews() {
+            const newsContainer = document.getElementById('newsContainer');
+            newsContainer.innerHTML = '';
+            newsItems.forEach((newsItem) => {
+                newsContainer.innerHTML += `
+                    <div class="news-item">
+                        <h3>${newsItem.title}</h3>
+                        <p>${newsItem.content}</p>
+                        <p class="news-date">${newsItem.date.toLocaleString()}</p>
+                    </div>
+                `;
+            });
+        }
+
+        function toggleTheme() {
+            const currentTheme = document.documentElement.getAttribute('data-theme');
+            document.documentElement.setAttribute('data-theme', currentTheme === 'dark' ? 'light' : 'dark');
+        }
+
+        // Initial render
+ renderDrafts();
+        renderEntries();
+        renderVisitorQuestions();
+        renderNews();
+    </script>
+</body>
+</html>
